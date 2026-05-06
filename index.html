@@ -82,7 +82,8 @@
         <div class="tab-group">
             <div class="tab active" data-file="itv.txt">ITV 直播源</div>
             <div class="tab" data-file="jd.txt">JD 直播源</div>
-            <div class="tab" data-file="dy.txt">DY 直播源</div>
+            <div class="tab" data-file="jiekou.txt">接口</div>
+            <div class="tab" data-file="节点.txt">节点</div>
         </div>
 
         <div class="tip">当前加载：itv.txt</div>
@@ -91,8 +92,6 @@
     </div>
 
 <script>
-// 可访问的文件列表
-const files = ["itv.txt", "jd.txt", "dy.txt"];
 const contentEl = document.getElementById("content");
 const copyBtn = document.getElementById("copyBtn");
 const tipEl = document.querySelector(".tip");
@@ -113,7 +112,7 @@ function loadFile(file) {
 
     fetch(file)
     .then(res => {
-        if (!res.ok) throw "文件不存在";
+        if (!res.ok) throw "文件不存在或路径错误";
         return res.text();
     })
     .then(text => {
