@@ -2,10 +2,70 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>我的 IPTV 页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV 直播源</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .source-box {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 700px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #222;
+        }
+        .tip {
+            margin: 15px 0;
+            color: #666;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>IPTV 列表</h1>
-    <p>这是我的 IPTV 静态页面部署成功啦！</p>
+    <div class="container">
+        <h1>IPTV 直播源</h1>
+        <div class="tip">加载中，请稍候...</div>
+        <div id="content" class="source-box"></div>
+    </div>
+
+    <script>
+        // 自动加载 itv.txt 内容并显示
+        fetch('itv.txt')
+            .then(res => res.text())
+            .then(text => {
+                document.getElementById('content').innerText = text;
+                document.querySelector('.tip').innerText = '加载成功';
+            })
+            .catch(err => {
+                document.getElementById('content').innerText = '加载失败：' + err;
+            });
+    </script>
 </body>
 </html>
