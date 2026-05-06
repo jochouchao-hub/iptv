@@ -12,60 +12,128 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: #121212;
+            color: #e0e0e0;
             padding: 20px;
-            line-height: 1.6;
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         h1 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 25px;
+            color: #fff;
         }
-        .source-box {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 15px;
+        .tab-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .tab {
+            padding: 10px 18px;
+            background: #1e1e1e;
+            border: 1px solid #444;
             border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #fff;
+        }
+        .tab.active {
+            background: #007bff;
+            border-color: #007bff;
+        }
+        .content-box {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            height: 500px;
+            overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 700px;
-            overflow-y: auto;
             font-size: 14px;
-            color: #222;
+            line-height: 1.6;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
         }
         .tip {
-            margin: 15px 0;
-            color: #666;
             text-align: center;
+            margin: 10px 0;
+            color: #aaa;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>IPTV 直播源</h1>
-        <div class="tip">加载中，请稍候...</div>
-        <div id="content" class="source-box"></div>
+        <div class="tab-group">
+            <div class="tab active" data-file="itv.txt">ITV 直播源</div>
+            <div class="tab" data-file="jd.txt">JD 直播源</div>
+            <div class="tab" data-file="dy.txt">DY 直播源</div>
+        </div>
+
+        <div class="tip">当前加载：itv.txt</div>
+        <button class="btn" id="copyBtn">复制全部内容</button>
+        <div class="content-box" id="content">加载中...</div>
     </div>
 
-    <script>
-        // 自动加载 itv.txt 内容并显示
-        fetch('itv.txt')
-            .then(res => res.text())
-            .then(text => {
-                document.getElementById('content').innerText = text;
-                document.querySelector('.tip').innerText = '加载成功';
-            })
-            .catch(err => {
-                document.getElementById('content').innerText = '加载失败：' + err;
-            });
-    </script>
+<script>
+// 可访问的文件列表
+const files = ["itv.txt", "jd.txt", "dy.txt"];
+const contentEl = document.getElementById("content");
+const copyBtn = document.getElementById("copyBtn");
+const tipEl = document.querySelector(".tip");
+
+// 切换标签
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        loadFile(tab.dataset.file);
+    });
+});
+
+// 加载文件内容
+function loadFile(file) {
+    contentEl.innerText = "正在加载：" + file;
+    tipEl.innerText = "当前加载：" + file;
+
+    fetch(file)
+    .then(res => {
+        if (!res.ok) throw "文件不存在";
+        return res.text();
+    })
+    .then(text => {
+        contentEl.innerText = text;
+    })
+    .catch(err => {
+        contentEl.innerText = "❌ 加载失败：" + err;
+    });
+}
+
+// 复制按钮
+copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(contentEl.innerText).then(() => {
+        copyBtn.innerText = "✅ 复制成功！";
+        setTimeout(() => copyBtn.innerText = "复制全部内容", 1500);
+    });
+});
+
+// 初始加载
+loadFile("itv.txt");
+</script>
 </body>
 </html>
